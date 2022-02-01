@@ -1,8 +1,7 @@
-const path = require('path');
-
-const dotenv = require('dotenv');
-const express = require('express');
-const mongoose = require('mongoose');
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import { errorHandler } from './src/middleware/ErrorHandler.js';
 
 dotenv.config();
 
@@ -12,6 +11,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(errorHandler);
 
 mongoose
   .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,4 +21,4 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-module.exports = app;
+export { app };
