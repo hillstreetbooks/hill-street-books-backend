@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,11 +19,15 @@
   },
   "homepage": "https://github.com/gokulramesh94/hill-street-books#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^15.0.0",
+    "email-validator": "^2.0.4",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.1.9"
+    "mongoose": "^6.1.9",
+    "nodemailer": "^6.7.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
