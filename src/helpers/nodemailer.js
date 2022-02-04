@@ -4,7 +4,8 @@ import nodemailer from 'nodemailer';
 
 dotenv.config();
 
-const { EMAIL_TYPE, EMAIL_USERNAME, EMAIL_PASSWORD } = process.env;
+const { EMAIL_TYPE, EMAIL_USERNAME, EMAIL_PASSWORD, SERVER_URL, PORT } =
+  process.env;
 
 /**
  * Creates a Transport to send emails
@@ -29,4 +30,23 @@ const verifyTransporter = () => {
   });
 };
 
-export { transporter, verifyTransporter };
+/**
+ * Configure Mail Options
+ * @param _id
+ * @param username
+ * @param uniqueString
+ * @returns mailOptions
+ */
+const configureMailOptions = (_id, username, uniqueString) => {
+  const serverUrl = SERVER_URL + PORT;
+  return {
+    from: EMAIL_USERNAME,
+    to: username,
+    subject: 'Please verify your email to activate your account!',
+    html: `<p>Please verify your email to activate your account.</p>
+        <p>This link will expre in <b>1 hour</b>.</p>
+        <p>Click <a href=${serverUrl}/api/author/verify/${_id}/${uniqueString}>here</a> to activate.</p>`
+  };
+};
+
+export { configureMailOptions, transporter, verifyTransporter };
