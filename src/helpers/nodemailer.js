@@ -17,4 +17,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export { transporter };
+/**
+ * Verify if the Transporter is configured properly
+ * @returns Result of Verification
+ */
+const verifyTransporter = () => {
+  transporter.verify((error, success) => {
+    if (error) console.log(error);
+    else console.log('Transporter configured successfully.');
+    return success;
+  });
+};
+
+export { transporter, verifyTransporter };
