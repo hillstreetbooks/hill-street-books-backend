@@ -1,5 +1,9 @@
 import { AuthorService } from '../services/author.service.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+const REACT_BASE_URL = process.env.REACT_SERVER_URL || 'http://localhost:3000';
 export class AuthorController {
   constructor() {
     this.service = new AuthorService();
@@ -24,7 +28,7 @@ export class AuthorController {
   verifyAuthorEmail = async (req, res) => {
     try {
       const response = await this.service.verifyAuthorEmail(req.params);
-      return res.send(response);
+      return res.redirect(`${REACT_BASE_URL}/registration?message=${response}`);
     } catch (error) {
       console.log(error);
       return res.send(error);
