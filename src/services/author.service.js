@@ -3,6 +3,7 @@ import * as EmailValidator from 'email-validator';
 import { EmailService } from './email.service.js';
 import { AuthorVerification } from '../models/AuthorVerification.js';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 export class AuthorService {
   constructor() {
@@ -113,4 +114,46 @@ export class AuthorService {
       return error;
     }
   };
+
+  /**
+   * Inserts the author in to the database
+   * @param user_details
+   * @returns Message
+   */
+   authenticateUser = async ({ username, password, remainLoggedIn}) => {   
+    if (EmailValidator.validate(username) && password ){
+      // Validate if author exist in database
+      const author = await Author.findOne({
+        username,
+      });
+      if (author && (await bcrypt.compare(password, author.password))) {
+        // Create token
+
+        const token = remainLoggedIn ? jwt.sign(
+          { user_id: author._id, username },
+          process.env.TOKEN_KEY
+        ) : jwt.sign(
+          { user_id: author._id, username },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "1h",
+          }
+        );
+  
+        // save author token
+        author.token = token;
+        await author.save();
+  
+        // user
+        return { username, token };
+      } else {
+        return "Invalid Credentials";
+      }
+    } else {
+      return "All fields are mandatory!";
+    }
+  };
+
+  
+
 }

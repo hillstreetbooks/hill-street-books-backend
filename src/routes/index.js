@@ -1,5 +1,6 @@
 import express from 'express';
 
+
 import { AuthorController } from '../controllers/author.controller.js';
 const router = express.Router();
 
@@ -11,5 +12,7 @@ router.get(
   '/author/verify/:userId/:uniqueString',
   AuthorControllerInstance.verifyAuthorEmail
 );
+router.post('/login', AuthorControllerInstance.authenticateUser);
+
 
 export { router };
