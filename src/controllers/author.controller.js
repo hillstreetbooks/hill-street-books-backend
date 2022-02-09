@@ -45,6 +45,15 @@ export class AuthorController {
     }
   };
 
-  
+    fetchAuthorInfo = async (req, res) => {
+      try {
+        const response = await this.service.fetchAuthorInfo(req.body.user);
+        return res.send(response);
+      } catch (error) {
+        console.log(error);
+        return res.send(error);
+      }
+    };
+
 
 }

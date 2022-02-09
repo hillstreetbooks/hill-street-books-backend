@@ -154,6 +154,21 @@ export class AuthorService {
     }
   };
 
-  
+  fetchAuthorInfo = async ({username}) => {   
+    if (username) {
+      // Validate if author exist in database
+      const author = await Author.findOne({
+        username,
+      });
+      if (author) {
+        let { name } = author;
+        return { username, name };
+      } else {
+        return { errorMsg: "Username not found!" };
+      }
+    } else {
+      return{ errorMsg: "Username is mandatory!" };
+    }
+  };
 
 }
