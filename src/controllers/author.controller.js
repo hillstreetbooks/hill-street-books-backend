@@ -34,4 +34,17 @@ export class AuthorController {
       return res.send(error);
     }
   };
+
+  authenticateUser = async (req, res) => {
+    try {
+      const response = await this.service.authenticateUser(req.body.user);
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  
+
 }
