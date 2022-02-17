@@ -3,7 +3,7 @@ import * as EmailValidator from 'email-validator';
 import { EmailService } from './email.service.js';
 import { AuthorVerification } from '../models/AuthorVerification.js';
 import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export class AuthorService {
   constructor() {
@@ -117,58 +117,61 @@ export class AuthorService {
 
   /**
    * Inserts the author in to the database
-   * @param user_details
+   * @param author_details
    * @returns Message
    */
-   authenticateUser = async ({ username, password, remainLoggedIn}) => {   
-    if (EmailValidator.validate(username) && password ){
+  authenticateUser = async ({ username, password, remainLoggedIn }) => {
+    if (EmailValidator.validate(username) && password) {
       // Validate if author exist in database
       const author = await Author.findOne({
-        username,
+        username
       });
-      if (author && (await bcrypt.compare(password, author.password))) {
-        // Create token
+      if (author) {
+        if (await bcrypt.compare(password, author.password)) {
+          // Create token
+          const token = remainLoggedIn
+            ? jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY)
+            : jwt.sign(
+                { user_id: author._id, username },
+                process.env.TOKEN_KEY,
+                {
+                  expiresIn: '2h'
+                }
+              );
 
-        const token = remainLoggedIn ? jwt.sign(
-          { user_id: author._id, username },
-          process.env.TOKEN_KEY
-        ) : jwt.sign(
-          { user_id: author._id, username },
-          process.env.TOKEN_KEY,
-          {
-            expiresIn: "1h",
-          }
-        );
-  
-        // save author token
-        author.token = token;
-        await author.save();
-  
-        // user
-        return { username, token };
+          // save author token
+          author.token = token;
+          await author.save();
+
+          // Fetch Author ID
+          const { _id } = author;
+
+          return { _id, username, token };
+        } else {
+          return 'Invalid Credentials';
+        }
       } else {
-        return "Invalid Credentials";
+        return `Username not found!`;
       }
     } else {
-      return "All fields are mandatory!";
+      return 'All fields are mandatory!';
     }
   };
 
-  fetchAuthorInfo = async ({username}) => {   
+  fetchAuthorInfo = async ({ username }) => {
     if (username) {
       // Validate if author exist in database
       const author = await Author.findOne({
-        username,
+        username
       });
       if (author) {
         let { name } = author;
         return { username, name };
       } else {
-        return { errorMsg: "Username not found!" };
+        return { errorMsg: 'Username not found!' };
       }
     } else {
-      return{ errorMsg: "Username is mandatory!" };
+      return { errorMsg: 'Username is mandatory!' };
     }
   };
-
 }

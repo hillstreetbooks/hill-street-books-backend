@@ -29,7 +29,7 @@ export class EmailService {
         userId: _id,
         uniqueString: hashedUniqueString,
         createAt: Date.now(),
-        expiresAt: Date.now() + 60000
+        expiresAt: Date.now() + 3600000
       });
 
       //Set AuthorVerification collection
