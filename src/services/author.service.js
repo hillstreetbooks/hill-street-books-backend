@@ -1,5 +1,4 @@
 import { Author } from '../models/Author.js';
-import * as EmailValidator from 'email-validator';
 import { EmailService } from './email.service.js';
 import { AuthorVerification } from '../models/AuthorVerification.js';
 import bcrypt from 'bcrypt';
@@ -15,31 +14,27 @@ export class AuthorService {
    * @returns Message
    */
   registerAuthor = async ({ username, password, name }) => {
-    if (EmailValidator.validate(username) && password && name) {
-      try {
-        const author = await Author.findOne({ username });
-        if (author) {
-          return 'An author has already registered with this email!';
-        } else {
-          //Encrypt author password
-          var encryptedPassword = await bcrypt.hash(password, 10);
-          const author = await Author.create({
-            username,
-            password: encryptedPassword,
-            name,
-            verified: false
-          });
-          await author.save();
-          const verificationEmail =
-            await this.emailServiceInstance.sendVerificationEmail(author);
-          return verificationEmail;
-        }
-      } catch (err) {
-        console.log(err);
-        return 'Oops! Something went wrong. Could not register author.';
+    try {
+      const author = await Author.findOne({ username });
+      if (author) {
+        return 'An author has already registered with this email!';
+      } else {
+        //Encrypt author password
+        var encryptedPassword = await bcrypt.hash(password, 10);
+        const author = await Author.create({
+          username,
+          password: encryptedPassword,
+          name,
+          verified: false
+        });
+        await author.save();
+        const verificationEmail =
+          await this.emailServiceInstance.sendVerificationEmail(author);
+        return verificationEmail;
       }
-    } else {
-      return 'All fields are mandatory!';
+    } catch (err) {
+      console.log(err);
+      return 'Oops! Something went wrong. Could not register author.';
     }
   };
 
@@ -52,7 +47,6 @@ export class AuthorService {
     try {
       const author = await AuthorVerification.findOne({ userId });
       if (author) {
-        console.log(author);
         const { expiresAt } = author;
         const hashedUniqueString = author.uniqueString;
         if (expiresAt < Date.now()) {
@@ -121,57 +115,45 @@ export class AuthorService {
    * @returns Message
    */
   authenticateUser = async ({ username, password, remainLoggedIn }) => {
-    if (EmailValidator.validate(username) && password) {
-      // Validate if author exist in database
-      const author = await Author.findOne({
-        username
-      });
-      if (author) {
-        if (await bcrypt.compare(password, author.password)) {
-          // Create token
-          const token = remainLoggedIn
-            ? jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY)
-            : jwt.sign(
-                { user_id: author._id, username },
-                process.env.TOKEN_KEY,
-                {
-                  expiresIn: '2h'
-                }
-              );
+    // Validate if author exist in database
+    const author = await Author.findOne({
+      username
+    });
+    if (author) {
+      if (await bcrypt.compare(password, author.password)) {
+        // Create token
+        const token = remainLoggedIn
+          ? jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY)
+          : jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY, {
+              expiresIn: '2h'
+            });
 
-          // save author token
-          author.token = token;
-          await author.save();
+        // save author token
+        author.token = token;
+        await author.save();
 
-          // Fetch Author ID
-          const { _id } = author;
+        // Fetch Author ID
+        const { _id } = author;
 
-          return { _id, username, token };
-        } else {
-          return 'Invalid Credentials';
-        }
+        return { _id, username, token };
       } else {
-        return `Username not found!`;
+        return 'Invalid Credentials';
       }
     } else {
-      return 'All fields are mandatory!';
+      return `Username not found!`;
     }
   };
 
   fetchAuthorInfo = async ({ username }) => {
-    if (username) {
-      // Validate if author exist in database
-      const author = await Author.findOne({
-        username
-      });
-      if (author) {
-        let { name } = author;
-        return { username, name };
-      } else {
-        return { errorMsg: 'Username not found!' };
-      }
+    // Validate if author exist in database
+    const author = await Author.findOne({
+      username
+    });
+    if (author) {
+      let { name } = author;
+      return { username, name };
     } else {
-      return { errorMsg: 'Username is mandatory!' };
+      return { errorMsg: 'Username not found!' };
     }
   };
 }

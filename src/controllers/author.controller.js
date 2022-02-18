@@ -14,7 +14,7 @@ export class AuthorController {
    */
   registerAuthor = async (req, res) => {
     try {
-      const response = await this.service.registerAuthor(req.body.user);
+      const response = await this.service.registerAuthor(req.body);
       return res.send(response);
     } catch (error) {
       console.log(error);
@@ -40,7 +40,7 @@ export class AuthorController {
    */
   authenticateUser = async (req, res) => {
     try {
-      const response = await this.service.authenticateUser(req.body.user);
+      const response = await this.service.authenticateUser(req.body);
       return res.send(response);
     } catch (error) {
       console.log(error);
@@ -53,7 +53,7 @@ export class AuthorController {
    */
   fetchAuthorInfo = async (req, res) => {
     try {
-      const response = await this.service.fetchAuthorInfo(req.body.user);
+      const response = await this.service.fetchAuthorInfo(req.query);
       return res.send(response);
     } catch (error) {
       console.log(error);
