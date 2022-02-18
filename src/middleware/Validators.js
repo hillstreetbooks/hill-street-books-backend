@@ -1,3 +1,10 @@
+/**
+ * Validate the request parameters based on the specified schema
+ * @param {*} schema
+ * @param {*} callback
+ * @returns Message or executes callback method
+ */
+
 const validateParams = (schema, callback) => {
   return (req, res, next) => {
     var params = {};

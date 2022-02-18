@@ -2,8 +2,6 @@ import { AuthorService } from '../services/author.service.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const REACT_BASE_URL = 'http://localhost:3000';
 export class AuthorController {
   constructor() {
     this.REACT_BASE_URL =
