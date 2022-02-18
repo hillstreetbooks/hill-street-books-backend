@@ -96,4 +96,22 @@ export class AuthorController {
       return res.send(error);
     }
   };
+
+  /**
+   * Reset Author's Password
+   */
+  resetPassword = async (req, res) => {
+    try {
+      const { userId, uniqueString, password } = req.body;
+      const response = await this.service.resetPassword(
+        userId,
+        uniqueString,
+        password
+      );
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
 }

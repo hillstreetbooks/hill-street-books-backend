@@ -6,7 +6,8 @@ import {
   fetchAuthorInfoSchema,
   forgotPasswordSchema,
   loginSchema,
-  registrationScehma
+  registrationScehma,
+  resetPasswordSchema
 } from '../schema/Schema.js';
 
 const router = express.Router();
@@ -39,6 +40,10 @@ router.post(
     forgotPasswordSchema,
     AuthorControllerInstance.retrievePassword
   )
+);
+router.post(
+  '/author/password-reset',
+  validateParams(resetPasswordSchema, AuthorControllerInstance.resetPassword)
 );
 
 export { router };

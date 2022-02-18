@@ -197,4 +197,73 @@ export class AuthorService {
       return 'Username not found!';
     }
   };
+
+  /**
+   * Reset Author's Password
+   * @param userId
+   * @param uniqueString
+   * @param password
+   * @returns Message
+   */
+  resetPassword = async (userId, uniqueString, password) => {
+    // Validate if author exist in database
+    try {
+      const author = await AuthorVerification.findOne({ userId });
+      if (author) {
+        const { expiresAt } = author;
+        const hashedUniqueString = author.uniqueString;
+        if (expiresAt < Date.now()) {
+          const deleteAuthorVerification = await AuthorVerification.deleteOne({
+            userId
+          });
+          if (deleteAuthorVerification) {
+            return 'Link has expired. Please try again.';
+          } else {
+            return 'Something went wrong while deleting the AuthorVerification record.';
+          }
+        } else {
+          try {
+            const uniqueStringValidation = await bcrypt.compare(
+              uniqueString,
+              hashedUniqueString
+            );
+            if (uniqueStringValidation) {
+              try {
+                //Encrypt author password
+                var encryptedPassword = await bcrypt.hash(password, 10);
+                const updatedAuthor = await Author.updateOne(
+                  { _id: userId },
+                  { password: encryptedPassword }
+                );
+                if (updatedAuthor) {
+                  try {
+                    await AuthorVerification.deleteOne({
+                      userId
+                    });
+                    return 'Your password has been reset successfully. Please login to access your account.';
+                  } catch (error) {
+                    console.log(error);
+                    return 'An error occurred while resetting your password.';
+                  }
+                }
+              } catch (error) {
+                console.log(error);
+                return 'An error occurred while resetting your password.';
+              }
+            } else {
+              return 'The unique string is invalid. Please try again!';
+            }
+          } catch (error) {
+            console.log(error);
+            return 'An error occurred while comparing unique string.';
+          }
+        }
+      } else {
+        return `Your password couldn't be reset because the associated account was not found in our database.`;
+      }
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
 }

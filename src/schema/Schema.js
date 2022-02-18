@@ -51,9 +51,23 @@ const forgotPasswordSchema = Joi.object().keys({
     .required()
 });
 
+const resetPasswordSchema = Joi.object().keys({
+  userId: Joi.required(),
+  uniqueString: Joi.string().required(),
+  password: Joi.string()
+    .pattern(
+      new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})')
+    )
+    .message(
+      'Password requirements are not met. Please hover (?) to check the requirements.'
+    ),
+  confirm_password: Joi.ref('password')
+});
+
 export {
   fetchAuthorInfoSchema,
   forgotPasswordSchema,
   loginSchema,
-  registrationScehma
+  registrationScehma,
+  resetPasswordSchema
 };
