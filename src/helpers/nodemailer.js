@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-
 import nodemailer from 'nodemailer';
+import { EMAIL_CONTENT } from '../constants/constants.js';
 
 dotenv.config();
 
@@ -32,20 +32,20 @@ const verifyTransporter = () => {
 
 /**
  * Configure Mail Options
- * @param _id
+ * @param type
  * @param username
- * @param uniqueString
+ * @param serverUrl
+ * @param URL
  * @returns mailOptions
  */
-const configureMailOptions = (_id, username, uniqueString) => {
-  const serverUrl = SERVER_URL + PORT;
+const configureMailOptions = (type, username, serverUrl, URL) => {
+  serverUrl = serverUrl || SERVER_URL + PORT;
+  const emailContent = EMAIL_CONTENT[type] || EMAIL_CONTENT.DEFAULT;
   return {
     from: EMAIL_USERNAME,
     to: username,
-    subject: 'Please verify your email to activate your account!',
-    html: `<p>Please verify your email to activate your account.</p>
-        <p>This link will expre in <b>1 hour</b>.</p>
-        <p>Click <a href=${serverUrl}/api/author/verify/${_id}/${uniqueString}>here</a> to activate.</p>`
+    subject: emailContent.SUBJECT,
+    html: emailContent.BODY.replace(/%\w+%/g, serverUrl + URL)
   };
 };
 
