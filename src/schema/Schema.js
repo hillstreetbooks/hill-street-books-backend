@@ -42,4 +42,18 @@ const fetchAuthorInfoSchema = Joi.object().keys({
     .required()
 });
 
-export { fetchAuthorInfoSchema, loginSchema, registrationScehma };
+const forgotPasswordSchema = Joi.object().keys({
+  username: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net'] }
+    })
+    .required()
+});
+
+export {
+  fetchAuthorInfoSchema,
+  forgotPasswordSchema,
+  loginSchema,
+  registrationScehma
+};

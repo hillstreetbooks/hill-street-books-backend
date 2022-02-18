@@ -10,10 +10,12 @@ export class AuthorService {
   }
   /**
    * Inserts the author in to the database
-   * @param user_details
+   * @param username
+   * @param password
+   * @param name
    * @returns Message
    */
-  registerAuthor = async ({ username, password, name }) => {
+  registerAuthor = async (username, password, name) => {
     try {
       const author = await Author.findOne({ username });
       if (author) {
@@ -29,7 +31,12 @@ export class AuthorService {
         });
         await author.save();
         const verificationEmail =
-          await this.emailServiceInstance.sendVerificationEmail(author);
+          await this.emailServiceInstance.sendVerificationEmail(
+            author._id,
+            username,
+            'VERIFY_EMAIL',
+            '/author/verify'
+          );
         return verificationEmail;
       }
     } catch (err) {
@@ -39,11 +46,12 @@ export class AuthorService {
   };
 
   /**
-   * Verify Author Email
-   * @param user_verification_details
+   * Verify Author's Email
+   * @param userId
+   * @param uniqueString
    * @returns Message
    */
-  verifyAuthorEmail = async ({ userId, uniqueString }) => {
+  verifyAuthorEmail = async (userId, uniqueString) => {
     try {
       const author = await AuthorVerification.findOne({ userId });
       if (author) {
@@ -110,11 +118,13 @@ export class AuthorService {
   };
 
   /**
-   * Inserts the author in to the database
-   * @param author_details
+   * Authenticate User Credentials
+   * @param username
+   * @param password
+   * @param remainLoggedIn
    * @returns Message
    */
-  authenticateUser = async ({ username, password, remainLoggedIn }) => {
+  authenticateUser = async (username, password, remainLoggedIn) => {
     // Validate if author exist in database
     const author = await Author.findOne({
       username
@@ -144,7 +154,12 @@ export class AuthorService {
     }
   };
 
-  fetchAuthorInfo = async ({ username }) => {
+  /**
+   * Fetch Author's Info
+   * @param username
+   * @returns Message
+   */
+  fetchAuthorInfo = async (username) => {
     // Validate if author exist in database
     const author = await Author.findOne({
       username
@@ -153,7 +168,33 @@ export class AuthorService {
       let { name } = author;
       return { username, name };
     } else {
-      return { errorMsg: 'Username not found!' };
+      return 'Username not found!';
+    }
+  };
+
+  /**
+   * Retrieve Author's password
+   * @param username
+   * @param REACT_BASE_URL
+   * @returns email
+   */
+  retrievePassword = async (username, REACT_BASE_URL) => {
+    // Validate if author exist in database
+    const author = await Author.findOne({
+      username
+    });
+    if (author) {
+      const verificationEmail =
+        await this.emailServiceInstance.sendVerificationEmail(
+          author._id,
+          username,
+          'PASSWORD_RESET',
+          '/password-reset',
+          REACT_BASE_URL
+        );
+      return verificationEmail;
+    } else {
+      return 'Username not found!';
     }
   };
 }

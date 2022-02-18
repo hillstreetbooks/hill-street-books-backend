@@ -10,18 +10,34 @@ import bcrypt from 'bcrypt';
 export class EmailService {
   /**
    * Sends a verification email for the author to verify
-   * @param user_details
+   * @param _id
+   * @param username
+   * @param type
+   * @param url
    * @returns Message
    */
-  sendVerificationEmail = async ({ _id, username }) => {
+  sendVerificationEmail = async (_id, username, type, url, serverUrl) => {
     const uniqueString = uuidv4() + _id;
 
     //Mailer Options
-    const mailOptions = configureMailOptions(_id, username, uniqueString);
+    const mailOptions = configureMailOptions(
+      type,
+      username,
+      serverUrl,
+      `/api${url}/${_id}/${uniqueString}`
+    );
 
     //Hash the uniqueString
     const saltRounds = 10;
     try {
+      const authorVerification = await AuthorVerification.findOne({
+        userId: _id
+      });
+      if (authorVerification) {
+        await AuthorVerification.deleteOne({
+          userId: _id
+        });
+      }
       const hashedUniqueString = await bcrypt.hash(uniqueString, saltRounds);
 
       //Set values to AuthorVerification collection
