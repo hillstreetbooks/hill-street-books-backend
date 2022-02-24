@@ -7,14 +7,16 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
+/** @module EmailService */
 export class EmailService {
   /**
-   * Sends a verification email for the author to verify
-   * @param _id
-   * @param username
-   * @param type
-   * @param url
-   * @returns Message
+   * @function sendVerificationEmail
+   * @description This method sends a verification email for the author to verify
+   * @param {string} _id The Author's unique ID in the database
+   * @param {string} username The Author's EmailID
+   * @param {string} type The type of email to be sent
+   * @param {string} url Link
+   * @returns {String} Returns a message
    */
   sendVerificationEmail = async (_id, username, type, url, serverUrl) => {
     const uniqueString = uuidv4() + _id;

@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# documentation
+/docs
+
 # environment files
 .env
 
