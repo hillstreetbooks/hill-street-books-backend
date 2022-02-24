@@ -4,16 +4,18 @@ import { AuthorVerification } from '../models/AuthorVerification.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+/** @module AuthorService */
 export class AuthorService {
   constructor() {
     this.emailServiceInstance = new EmailService();
   }
   /**
-   * Inserts the author in to the database
-   * @param username
-   * @param password
-   * @param name
-   * @returns Message
+   * @function registerAuthor
+   * @description This method inserts the author's details as a record in the database
+   * @param {string} username The Author's EmailID
+   * @param {string} password The Author's Password
+   * @param {string} name The Author's Name
+   * @returns {string} Returns a message
    */
   registerAuthor = async (username, password, name) => {
     try {
@@ -47,9 +49,9 @@ export class AuthorService {
 
   /**
    * Verify Author's Email
-   * @param userId
-   * @param uniqueString
-   * @returns Message
+   * @param {string} userId
+   * @param {string} uniqueString
+   * @returns {string} Message
    */
   verifyAuthorEmail = async (userId, uniqueString) => {
     try {
@@ -118,11 +120,12 @@ export class AuthorService {
   };
 
   /**
-   * Authenticate User Credentials
-   * @param username
-   * @param password
-   * @param remainLoggedIn
-   * @returns Message
+   * @function authenticateUser
+   * @description This method validates the author's credentials
+   * @param {string} username The Author's EmailID
+   * @param {string} password The Author's Password
+   * @param {boolean} remainLoggedIn Remain Logged In
+   * @returns {string} Returns a message
    */
   authenticateUser = async (username, password, remainLoggedIn) => {
     // Validate if author exist in database
@@ -163,9 +166,10 @@ export class AuthorService {
   };
 
   /**
-   * Fetch Author's Info
-   * @param username
-   * @returns Message
+   * @function fetchAuthorInfo
+   * @description This method fetches the Author's Info
+   * @param {string} username The Author's EmailID
+   * @returns {object} Returns an object which has author's details
    */
   fetchAuthorInfo = async (username) => {
     // Validate if author exist in database
@@ -174,17 +178,18 @@ export class AuthorService {
     });
     if (author) {
       let { name } = author;
-      return { username, name };
+      return { username, name, password };
     } else {
       return 'Username not found!';
     }
   };
 
   /**
-   * Retrieve Author's password
-   * @param username
-   * @param REACT_BASE_URL
-   * @returns email
+   * @function retrievePassword
+   * @description This method validates the author's email and sends a retrieve password link
+   * @param {string} username The Author's EmailID
+   * @param {string} REACT_BASE_URL Frontend Base URL
+   * @returns {String} Returns a message
    */
   retrievePassword = async (username, REACT_BASE_URL) => {
     // Validate if author exist in database
@@ -207,11 +212,12 @@ export class AuthorService {
   };
 
   /**
-   * Reset Author's Password
-   * @param userId
-   * @param uniqueString
-   * @param password
-   * @returns Message
+   * @function resetPassword
+   * @description This method resets the Author's Password
+   * @param {string} userId The Author's unique ID in the database
+   * @param {string} uniqueString Unique generated String
+   * @param {string} password The Author's Password
+   * @returns {String} Returns a message
    */
   resetPassword = async (userId, uniqueString, password) => {
     // Validate if author exist in database

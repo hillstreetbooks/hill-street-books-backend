@@ -2,6 +2,8 @@ import { AuthorService } from '../services/author.service.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+/** @module AuthorController */
 export class AuthorController {
   constructor() {
     this.REACT_BASE_URL =
@@ -10,7 +12,11 @@ export class AuthorController {
   }
 
   /**
-   * Insert Author details to DB
+   * @function registerAuthor
+   * @description This method inserts the author's details as a record in the database
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
    */
   registerAuthor = async (req, res) => {
     try {
@@ -28,7 +34,11 @@ export class AuthorController {
   };
 
   /**
-   * Verify Author's Email ID
+   * @function verifyAuthorEmail
+   * @description This method verifies the Author's Email
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Redirects to the registration page
    */
   verifyAuthorEmail = async (req, res) => {
     try {
@@ -47,7 +57,11 @@ export class AuthorController {
   };
 
   /**
-   * Authenticate User Credentials
+   * @function authenticateUser
+   * @description This method validates the author's credentials
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
    */
   authenticateUser = async (req, res) => {
     try {
@@ -65,7 +79,11 @@ export class AuthorController {
   };
 
   /**
-   * Fetch Author's Info
+   * @function fetchAuthorInfo
+   * @description This method fetches the Author's Info
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
    */
   fetchAuthorInfo = async (req, res) => {
     try {
@@ -79,7 +97,11 @@ export class AuthorController {
   };
 
   /**
-   * Send Retrieve Password link
+   * @function retrievePassword
+   * @description This method validates the author's email and sends a retrieve password link
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
    */
   retrievePassword = async (req, res) => {
     try {
@@ -96,7 +118,11 @@ export class AuthorController {
   };
 
   /**
-   * Reset Author's Password
+   * @function resetPassword
+   * @description This method resets the Author's Password
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
    */
   resetPassword = async (req, res) => {
     try {
