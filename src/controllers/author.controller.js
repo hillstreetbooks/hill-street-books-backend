@@ -86,7 +86,7 @@ export class AuthorController {
       const { username } = req.body;
       const response = await this.service.retrievePassword(
         username,
-        REACT_BASE_URL
+        this.REACT_BASE_URL
       );
       return res.send(response);
     } catch (error) {

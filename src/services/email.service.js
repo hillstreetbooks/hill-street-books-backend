@@ -24,7 +24,7 @@ export class EmailService {
       type,
       username,
       serverUrl,
-      `/api${url}/${_id}/${uniqueString}`
+      `${url}/${_id}/${uniqueString}`
     );
 
     //Hash the uniqueString
@@ -57,7 +57,7 @@ export class EmailService {
           return transporter
             .sendMail(mailOptions)
             .then(() => {
-              return `Verification email sent to the registered Email ID!`;
+              return `A Verification email has been sent to the registered Email ID!`;
             })
             .catch((error) => {
               console.log(error);

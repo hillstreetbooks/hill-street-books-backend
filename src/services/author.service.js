@@ -35,7 +35,7 @@ export class AuthorService {
             author._id,
             username,
             'VERIFY_EMAIL',
-            '/author/verify'
+            '/api/author/verify'
           );
         return verificationEmail;
       }
@@ -130,24 +130,32 @@ export class AuthorService {
       username
     });
     if (author) {
-      if (await bcrypt.compare(password, author.password)) {
-        // Create token
-        const token = remainLoggedIn
-          ? jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY)
-          : jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY, {
-              expiresIn: '2h'
-            });
+      if (author.verified) {
+        if (await bcrypt.compare(password, author.password)) {
+          // Create token
+          const token = remainLoggedIn
+            ? jwt.sign({ user_id: author._id, username }, process.env.TOKEN_KEY)
+            : jwt.sign(
+                { user_id: author._id, username },
+                process.env.TOKEN_KEY,
+                {
+                  expiresIn: '2h'
+                }
+              );
 
-        // save author token
-        author.token = token;
-        await author.save();
+          // save author token
+          author.token = token;
+          await author.save();
 
-        // Fetch Author ID
-        const { _id } = author;
+          // Fetch Author ID
+          const { _id, name } = author;
 
-        return { _id, username, token };
+          return { _id, name, username, token };
+        } else {
+          return 'Sorry, your password is incorrect. Please try again with the correct password or use the forgot password option to reset your password.';
+        }
       } else {
-        return 'Invalid Credentials';
+        return 'Please verify your email by clicking the link in the verification email sent to your registered EmailID.';
       }
     } else {
       return `Username not found!`;
@@ -240,7 +248,7 @@ export class AuthorService {
                     await AuthorVerification.deleteOne({
                       userId
                     });
-                    return 'Your password has been reset successfully. Please login to access your account.';
+                    return 'Your password has been reset successfully. Please sign in to access your account.';
                   } catch (error) {
                     console.log(error);
                     return 'An error occurred while resetting your password.';
