@@ -13,8 +13,8 @@ const app = express();
 
 //Enable cors
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ limit: '30mb', extended: true }));
+app.use(express.json({ limit: '30mb' }));
 app.use(errorHandler);
 
 app.use('/api', router);
