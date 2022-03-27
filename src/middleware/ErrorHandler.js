@@ -5,7 +5,7 @@ export const notFoundHandler = function (_req, res) {
 };
 
 export const errorHandler = function (err, req, res, next) {
-  if (err instanceof ValidateError) {
+  if (err) {
     console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
     return res.status(422).json({
       message: 'Validation Failed',
