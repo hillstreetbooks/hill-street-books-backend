@@ -15,6 +15,7 @@ const AuthorSchema = new Schema({
     type: String,
     required: true
   },
+  isAdmin: { type: Boolean },
   verified: { type: Boolean },
   token: { type: String }
 });
