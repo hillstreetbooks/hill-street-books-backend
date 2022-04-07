@@ -52,6 +52,76 @@ export class AdminService {
   };
 
   /**
+   * @function publishAuthorContent
+   * @description This method publishes the author content
+   * @param {String} _id Author's ID
+   * @param {String} message Admin's message to the author
+   * @returns {String} Returns a message
+   */
+  publishAuthorContent = async (_id, message) => {
+    try {
+      return Author.findOne({ _id: ObjectId(_id) }).then(async (author) => {
+        const authorContent = await AuthorContent.findOne({
+          username: author.username
+        });
+        if (authorContent) {
+          authorContent.isPublished = true;
+          await authorContent.save();
+          const emailResponse = await this.emailServiceInstance.sendEmail(
+            author.username,
+            author.name,
+            'Published',
+            message
+          );
+          return emailResponse;
+        } else {
+          return `${author.name} does not have a content page to publish.`;
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      return {
+        errorMsg: `Oops! Something went wrong. Could not publish author's content!`
+      };
+    }
+  };
+
+  /**
+   * @function unpublishAuthorContent
+   * @description This method unpublishes the author content
+   * @param {String} _id Author's ID
+   * @param {String} message Admin's message to the author
+   * @returns {String} Returns a message
+   */
+  unpublishAuthorContent = async (_id, message) => {
+    try {
+      return Author.findOne({ _id: ObjectId(_id) }).then(async (author) => {
+        const authorContent = await AuthorContent.findOne({
+          username: author.username
+        });
+        if (authorContent) {
+          authorContent.isPublished = false;
+          await authorContent.save();
+          const emailResponse = await this.emailServiceInstance.sendEmail(
+            author.username,
+            author.name,
+            'Unpublished',
+            message
+          );
+          return emailResponse;
+        } else {
+          return `${author.name} does not have a content page to unpublish.`;
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      return {
+        errorMsg: `Oops! Something went wrong. Could not unpublish author's content!`
+      };
+    }
+  };
+
+  /**
    * @function removeAuthorContent
    * @description This method removes the author content
    * @param {String} _id Author's ID

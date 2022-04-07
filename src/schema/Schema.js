@@ -18,7 +18,8 @@ const registrationScehma = Joi.object()
         'Password requirements are not met. Please hover (?) to check the requirements.'
       ),
     confirm_password: Joi.ref('password'),
-    name: Joi.string().min(3).max(25).required()
+    name: Joi.string().min(3).max(25).required(),
+    isAdmin: Joi.boolean().required()
   })
   .with('password', 'confirm_password');
 
@@ -74,55 +75,7 @@ const resetPasswordSchema = Joi.object().keys({
   confirm_password: Joi.ref('password')
 });
 
-const bookSchema = Joi.object().keys({
-  title: Joi.string().required(),
-  price: Joi.string().required(),
-  publishedDate: Joi.string().required(),
-  publisher: Joi.string().required(),
-  isbn: Joi.string().required(),
-  language: Joi.string().required(),
-  bookCover: Joi.string(),
-  description: Joi.string().required(),
-  ageGroup: Joi.string().required()
-});
-
-const socialLinksSchema = Joi.object().keys({
-  facebook: Joi.string().required(),
-  instagram: Joi.string().required(),
-  twitter: Joi.string().required(),
-  pinterest: Joi.string().required()
-});
-
-const authorDetailsSchema = Joi.object().keys({
-  firstname: Joi.string().required(),
-  lastname: Joi.string().required(),
-  dob: Joi.string().required(),
-  email: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
-    })
-    .required(),
-  displayPicture: Joi.string().required(),
-  website: Joi.string().required(),
-  location: Joi.string().required(),
-  biography: Joi.string().required()
-});
-
-const authorContentSchema = Joi.object().keys({
-  username: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
-    })
-    .required(),
-  // author_details: authorDetailsSchema,
-  // social_links: socialLinksSchema,
-  books: Joi.array().items(bookSchema)
-});
-
 export {
-  authorContentSchema,
   fetchAuthorInfoSchema,
   forgotPasswordSchema,
   loginSchema,

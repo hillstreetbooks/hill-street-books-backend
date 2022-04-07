@@ -86,6 +86,18 @@ router.post(
 );
 
 router.post(
+  '/admin/publish-author-page',
+  verifyToken,
+  AdminControllerInstance.publishAuthorContent
+);
+
+router.post(
+  '/admin/unpublish-author-page',
+  verifyToken,
+  AdminControllerInstance.unpublishAuthorContent
+);
+
+router.post(
   '/admin/remove-author-page',
   verifyToken,
   AdminControllerInstance.removeAuthorContent
