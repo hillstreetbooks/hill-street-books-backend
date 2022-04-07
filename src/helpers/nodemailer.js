@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-import { EMAIL_CONTENT } from '../constants/constants.js';
 
 dotenv.config();
 
@@ -32,20 +31,17 @@ const verifyTransporter = () => {
 
 /**
  * Configure Mail Options
- * @param type
  * @param username
- * @param serverUrl
- * @param URL
+ * @param emailSubject
+ * @param emailBody
  * @returns mailOptions
  */
-const configureMailOptions = (type, username, serverUrl, URL) => {
-  serverUrl = serverUrl || SERVER_URL + PORT;
-  const emailContent = EMAIL_CONTENT[type] || EMAIL_CONTENT.DEFAULT;
+const configureMailOptions = (username, emailSubject, emailBody) => {
   return {
     from: EMAIL_USERNAME,
     to: username,
-    subject: emailContent.SUBJECT,
-    html: emailContent.BODY.replace(/%\w+%/g, serverUrl + URL)
+    subject: emailSubject,
+    html: emailBody
   };
 };
 

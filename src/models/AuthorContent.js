@@ -98,7 +98,15 @@ const AuthorContentSchema = new Schema({
   author_details: AuthorDetails,
   social_links: SocialLinks,
   books: [Books],
-  videos: [CustomInput]
+  videos: [CustomInput],
+  isPublished: {
+    type: Boolean,
+    required: true
+  },
+  lastUpdated: {
+    type: String,
+    required: true
+  }
 });
 
 const AuthorContent = mongoose.model('AuthorContent', AuthorContentSchema);

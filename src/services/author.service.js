@@ -15,9 +15,10 @@ export class AuthorService {
    * @param {string} username The Author's EmailID
    * @param {string} password The Author's Password
    * @param {string} name The Author's Name
+   * @param {Boolean} isAdmin The Author is an admin
    * @returns {string} Returns a message
    */
-  registerAuthor = async (username, password, name) => {
+  registerAuthor = async (username, password, name, isAdmin) => {
     try {
       const author = await Author.findOne({ username });
       if (author) {
@@ -29,6 +30,7 @@ export class AuthorService {
           username,
           password: encryptedPassword,
           name,
+          isAdmin,
           verified: false
         });
         await author.save();
@@ -151,9 +153,9 @@ export class AuthorService {
           await author.save();
 
           // Fetch Author ID
-          const { _id, name } = author;
+          const { _id, name, isAdmin } = author;
 
-          return { _id, name, username, token };
+          return { _id, name, username, isAdmin, token };
         } else {
           return 'Sorry, your password is incorrect. Please try again with the correct password or use the forgot password option to reset your password.';
         }
@@ -178,9 +180,31 @@ export class AuthorService {
     });
     if (author) {
       let { name } = author;
-      return { username, name, password };
+      return { username, name };
     } else {
-      return 'Username not found!';
+      return 'The Username is not in our records. Please register to access your profile information or contact site administrator!';
+    }
+  };
+
+  /**
+   * @function updateAuthorInfo
+   * @description This method fetches the Author's Info
+   * @param {string} username The Author's EmailID
+   * @param {string} name The Author's name
+   * @returns {object} Returns an object which has author's details
+   */
+  updateAuthorInfo = async (username, name) => {
+    // Validate if author exist in database
+    const author = await Author.findOne({
+      username
+    });
+    if (author) {
+      author.username = username;
+      author.name = name;
+      await author.save();
+      return { username, name };
+    } else {
+      return 'The Username is not in our records. Please register to access your profile information or contact site administrator!';
     }
   };
 

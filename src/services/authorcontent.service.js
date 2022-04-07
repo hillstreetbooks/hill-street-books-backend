@@ -1,5 +1,8 @@
+import { Author } from '../models/Author.js';
 import { AuthorContent } from '../models/AuthorContent.js';
 import { ImageUploaderService } from './imageuploader.service.js';
+import { ObjectId } from 'mongodb';
+import moment from 'moment';
 
 /** @module AuthorContentService */
 export class AuthorContentService {
@@ -36,6 +39,7 @@ export class AuthorContentService {
         author.social_links = social_links;
         author.books = books;
         author.videos = videos;
+        author.lastUpdated = moment().format('DD-MM-YYY HH:mm:ss');
         await author.save();
       } else {
         if (
@@ -60,7 +64,9 @@ export class AuthorContentService {
           author_details,
           social_links,
           books,
-          videos
+          videos,
+          isPublished: true,
+          lastUpdated: moment().format('DD-MM-YYY HH:mm:ss')
         });
       }
       return `Updated author's content`;
@@ -75,18 +81,24 @@ export class AuthorContentService {
   /**
    * @function fetchContent
    * @description This method fetches the author's content from the database
-   * @param {String} username Author's username (email)
+   * @param {String} _id Author's ID
    * @returns {AuthorContent} Returns an Object (AuthorContent)
    */
-  fetchContent = async (username) => {
+  fetchContent = async (_id) => {
     try {
-      const author = await AuthorContent.findOne({ username });
-      console.log('username : ', username);
-      if (author) {
-        return author;
-      } else {
+      return Author.findOne({ _id: ObjectId(_id) }).then(async (author) => {
+        if (author) {
+          const authorContent = await AuthorContent.findOne({
+            username: author.username
+          });
+          if (authorContent && authorContent.isPublished) {
+            return authorContent;
+          } else {
+            return {};
+          }
+        }
         return {};
-      }
+      });
     } catch (err) {
       console.log(err);
       return {
