@@ -32,8 +32,8 @@ export class AuthorContentController {
    */
   fetchContent = async (req, res) => {
     try {
-      const { username } = req.body;
-      const response = await this.service.fetchContent(username);
+      const { _id } = req.body;
+      const response = await this.service.fetchContent(_id);
       return res.send(response);
     } catch (error) {
       console.log(error);

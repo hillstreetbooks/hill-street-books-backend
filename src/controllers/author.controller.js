@@ -20,11 +20,12 @@ export class AuthorController {
    */
   registerAuthor = async (req, res) => {
     try {
-      const { username, password, name } = req.body;
+      const { username, password, name, isAdmin } = req.body;
       const response = await this.service.registerAuthor(
         username,
         password,
-        name
+        name,
+        isAdmin
       );
       return res.send(response);
     } catch (error) {
@@ -87,8 +88,26 @@ export class AuthorController {
    */
   fetchAuthorInfo = async (req, res) => {
     try {
-      const { username } = req.query;
+      const { username } = req.body;
       const response = await this.service.fetchAuthorInfo(username);
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  /**
+   * @function updateAuthorInfo
+   * @description This method updates the Author's Info
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {object} Returns a response object
+   */
+  updateAuthorInfo = async (req, res) => {
+    try {
+      const { username, name } = req.body;
+      const response = await this.service.updateAuthorInfo(username, name);
       return res.send(response);
     } catch (error) {
       console.log(error);
