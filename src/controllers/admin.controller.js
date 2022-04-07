@@ -27,6 +27,48 @@ export class AdminController {
   };
 
   /**
+   * @function publishAuthorContent
+   * @description This method publishes the author content
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {String} Returns a message
+   */
+  publishAuthorContent = async (req, res) => {
+    try {
+      const { _id, message } = req.body;
+      const response = await this.service.publishAuthorContent(
+        _id,
+        message.value
+      );
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  /**
+   * @function unpublishAuthorContent
+   * @description This method unpublishes the author content
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {String} Returns a message
+   */
+  unpublishAuthorContent = async (req, res) => {
+    try {
+      const { _id, message } = req.body;
+      const response = await this.service.unpublishAuthorContent(
+        _id,
+        message.value
+      );
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  /**
    * @function removeAuthorContent
    * @description This method removes the author content
    * @param {object} req Request Object
