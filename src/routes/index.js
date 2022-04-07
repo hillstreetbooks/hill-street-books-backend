@@ -85,4 +85,10 @@ router.post(
   AdminControllerInstance.fetchAuthors
 );
 
+router.post(
+  '/admin/remove-author-page',
+  verifyToken,
+  AdminControllerInstance.removeAuthorContent
+);
+
 export { router };

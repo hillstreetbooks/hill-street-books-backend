@@ -50,4 +50,37 @@ export class AdminService {
       return res.send(error);
     }
   };
+
+  /**
+   * @function removeAuthorContent
+   * @description This method removes the author content
+   * @param {String} _id Author's ID
+   * @param {String} message Admin's message to the author
+   * @returns {String} Returns a message
+   */
+  removeAuthorContent = async (_id, message) => {
+    try {
+      return Author.findOne({ _id: ObjectId(_id) }).then(async (author) => {
+        const authorContent = await AuthorContent.deleteOne({
+          username: author.username
+        });
+        if (authorContent) {
+          const emailResponse = await this.emailServiceInstance.sendEmail(
+            author.username,
+            author.name,
+            'Removed',
+            message
+          );
+          return emailResponse;
+        } else {
+          return `${author.name} does not have a content page to remove.`;
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      return {
+        errorMsg: `Oops! Something went wrong. Could not unpublish author's content!`
+      };
+    }
+  };
 }
