@@ -103,4 +103,16 @@ router.post(
   AdminControllerInstance.removeAuthorContent
 );
 
+router.post(
+  '/admin/remove-notification',
+  verifyToken,
+  AdminControllerInstance.removeNotification
+);
+
+router.post(
+  '/admin/fetch-notifications',
+  verifyToken,
+  AdminControllerInstance.fetchAdminNotifications
+);
+
 export { router };

@@ -1,4 +1,5 @@
 import { AdminService } from '../services/admin.service.js';
+import { NotificationService } from '../services/notification.service.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -7,6 +8,7 @@ dotenv.config();
 export class AdminController {
   constructor() {
     this.service = new AdminService();
+    this.notificationServiceInstance = new NotificationService();
   }
 
   /**
@@ -82,6 +84,45 @@ export class AdminController {
         _id,
         message.value
       );
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  /**
+   * @function removeNotification
+   * @description This method removes the notification once it is viewed by the admin
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {String} Returns a message
+   */
+  removeNotification = async (req, res) => {
+    try {
+      const { username } = req.body;
+      const response =
+        await this.notificationServiceInstance.removeAdminNotification(
+          username
+        );
+      return res.send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(error);
+    }
+  };
+
+  /**
+   * @function fetchAdminNotifications
+   * @description This method removes the notification once it is viewed by the admin
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @returns {Array} Returns an array of notifications
+   */
+  fetchAdminNotifications = async (req, res) => {
+    try {
+      const response =
+        await this.notificationServiceInstance.fetchAdminNotifications();
       return res.send(response);
     } catch (error) {
       console.log(error);
