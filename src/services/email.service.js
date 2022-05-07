@@ -14,8 +14,7 @@ dotenv.config();
 /** @module EmailService */
 export class EmailService {
   constructor() {
-    this.SERVER_URL =
-      process?.env?.SERVER_URL + process?.env.PORT || 'http://localhost:3000';
+    this.SERVER_URL = process?.env?.SERVER_URL || 'http://localhost:4000';
   }
 
   /**

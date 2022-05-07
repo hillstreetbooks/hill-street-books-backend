@@ -3,8 +3,7 @@ import nodemailer from 'nodemailer';
 
 dotenv.config();
 
-const { EMAIL_TYPE, EMAIL_USERNAME, EMAIL_PASSWORD, SERVER_URL, PORT } =
-  process.env;
+const { EMAIL_TYPE, EMAIL_USERNAME, EMAIL_PASSWORD } = process.env;
 
 /**
  * Creates a Transport to send emails

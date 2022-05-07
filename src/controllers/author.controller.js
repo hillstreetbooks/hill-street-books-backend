@@ -7,7 +7,7 @@ dotenv.config();
 export class AuthorController {
   constructor() {
     this.REACT_BASE_URL =
-      process?.env?.REACT_SERVER_URL || 'http://localhost:3000';
+      process?.env?.REACT_SERVER_URL || 'http://localhost:4000';
     this.service = new AuthorService();
   }
 
