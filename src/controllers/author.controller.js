@@ -7,7 +7,7 @@ dotenv.config();
 export class AuthorController {
   constructor() {
     this.REACT_BASE_URL =
-      process?.env?.REACT_SERVER_URL || 'http://localhost:4000';
+      process?.env?.REACT_SERVER_URL || 'http://localhost:3000/';
     this.service = new AuthorService();
   }
 
@@ -49,7 +49,7 @@ export class AuthorController {
         uniqueString
       );
       return res.redirect(
-        `${this.REACT_BASE_URL}/registration?message=${response}`
+        `${this.REACT_BASE_URL}registration?message=${response}`
       );
     } catch (error) {
       console.log(error);

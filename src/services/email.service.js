@@ -31,8 +31,11 @@ export class EmailService {
 
     const emailContent = EMAIL_CONTENT[type] || EMAIL_CONTENT.DEFAULT;
 
+    console.log('serverUrl 1 : ', serverUrl);
+    console.log('this.SERVER_URL : ', this.SERVER_URL);
     serverUrl = serverUrl || this.SERVER_URL;
 
+    console.log('serverUrl : ', serverUrl);
     //Mailer Options
     const mailOptions = configureMailOptions(
       username,
