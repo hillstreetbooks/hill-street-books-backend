@@ -5,7 +5,7 @@ const registrationScehma = Joi.object()
     username: Joi.string()
       .email({
         minDomainSegments: 2,
-        tlds: { allow: ['com', 'net'] }
+        tlds: { allow: ['com', 'net', 'ca'] }
       })
       .required(),
     password: Joi.string()
@@ -27,7 +27,7 @@ const loginSchema = Joi.object().keys({
   username: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
+      tlds: { allow: ['com', 'net', 'ca'] }
     })
     .required(),
   password: Joi.string().required(),
@@ -38,7 +38,7 @@ const fetchAuthorInfoSchema = Joi.object().keys({
   username: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
+      tlds: { allow: ['com', 'net', 'ca'] }
     })
     .required()
 });
@@ -47,7 +47,7 @@ const updateAuthorInfoSchema = Joi.object().keys({
   username: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
+      tlds: { allow: ['com', 'net', 'ca'] }
     })
     .required(),
   name: Joi.string().required()
@@ -57,7 +57,7 @@ const forgotPasswordSchema = Joi.object().keys({
   username: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] }
+      tlds: { allow: ['com', 'net', 'ca'] }
     })
     .required()
 });
